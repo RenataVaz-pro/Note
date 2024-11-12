@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Manager</title>
+</head>
+<body>
+    <div class="sidebar {% if sidebar_open %}open{% endif %}" id="sidebar">
+        <button class="close-btn" onclick="toggleSidebar()">✖</button>
+        <h2>Minhas Notas</h2>
+        <div class="notas-container">
+            {% for nota in notas %}
+            <div class="nota-box">
+                <form action="/salvar/{{ nota['id'] }}" method="post" id="form-{{ nota['id'] }}" class="form-editar">
+                    <input type="text" name="titulo" value="{{ nota['titulo'] }}" readonly id="titulo-{{ nota['id'] }}" class="input-titulo">
+                    <textarea name="descricao" readonly id="descricao-{{ nota['id'] }}" class="input-descricao">{{ nota['descricao'] }}</textarea>
+                    <button type="button" onclick="enableEditing({{ nota['id'] }})" id="edit-{{ nota['id'] }}" class="button-editar">
+                        <i class='bx bxs-edit'></i>
+                    </button>
+                    <button type="submit" style="display: none;" id="save-{{ nota['id'] }}" class="button-salvar">Salvar</button>
+                </form>
+                <form action="/deletar/{{ nota['id'] }}" method="post" id="form-deletar-{{ nota['id'] }}" class="form-deletar" onsubmit="keepSidebarOpen()">
+                    <button type="submit" class="button-deletar">
+                        <i class='bx bxs-trash'></i>
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="main-container">
+        <button class="open-btn" onclick="toggleSidebar()">☰ Minhas Notas</button>
+        <div class="title">Note Manager</div>
+        <div class="form-container">
+            <form action="/adicionar" method="post" class="form-adicionar">
+                <div class="input-box">
+                    <span class="name">Digite sua nota</span>
+                    <input type="text" name="titulo" placeholder="Título" class="input-titulo" required>
+                    <textarea name="descricao" placeholder="Descrição" class="input-descricao" required></textarea>
+                    <button type="submit" class="button-adicionar">
+                        <i class='bx bxs-plus-circle'></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
